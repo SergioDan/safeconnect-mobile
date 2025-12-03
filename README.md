@@ -1,107 +1,133 @@
-# SafeConnect – Family Safety & Check-ins (Android & iOS)
 
-SafeConnect is a cross-platform mobile app (Android + iOS) that helps families and close friends stay connected through quick safety check-ins.
-
-The goal of this project is to showcase modern mobile development on both platforms with clean architecture, offline-first design, and a clear path to backend/IoT integration.
-
----
-
-## Features (MVP)
-
-- 👥 **Trusted contacts**
-  - Add, edit and remove trusted contacts (name, relationship, phone number).
-
-- ✅ **Quick safety check-ins**
-  - One-tap “I'm OK” check-in stored locally with timestamp.
-  - “Need to talk” action that opens the device dialer or preferred messaging app (no backend required).
-
-- 🕒 **Local history**
-  - Simple timeline of recent check-ins stored on the device.
-
-- 🌗 **Modern UI**
-  - Clean, minimal UI with support for light/dark mode.
-  - Uses modern UI frameworks on both platforms (Jetpack Compose & SwiftUI).
-
-- 🧱 **Clean architecture**
-  - Clear separation of layers (UI, domain, data).
-  - Ready to plug in a backend API (e.g. Python/FastAPI) in a future iteration.
+# SafeConnect  
+A human-centered safety communication app designed to help people stay connected during emergency or high-stress situations.  
+SafeConnect aims to provide a fast, reliable way to send alerts, initiate calls, and share real-time status with trusted contacts — even when traditional communication methods fail.
 
 ---
 
-## Tech Stack
+## 📌 Why SafeConnect?  
+SafeConnect was born from a very personal motivation:  
+**creating a simple, reliable way for loved ones to reach each other immediately during moments of fear, danger, or medical need.**
 
-### Android
+Most solutions are:
+- Slow  
+- Complicated  
+- Not designed for real emergencies  
+- Dependent on too many steps  
 
-- **Language:** Kotlin
-- **UI:** Jetpack Compose
-- **Architecture:** MVVM + Clean Architecture
-- **Async:** Coroutines & Flow
-- **Persistence:** Room (or DataStore for simple preferences)
-- **Build tools:** Gradle, Android Studio
-
-### iOS
-
-- **Language:** Swift
-- **UI:** SwiftUI
-- **Architecture:** MVVM
-- **Async:** Combine (or async/await for newer APIs)
-- **Persistence:** UserDefaults for the MVP (CoreData planned)
-- **Build tools:** Xcode
+SafeConnect focuses on:
+- **Instant alerting**
+- **Minimal taps**
+- **Human-centred design**
+- **Cross-platform communication**
+- **Fail-safe mechanisms**
 
 ---
 
-## Project Structure
+# 🧩 Project Structure
 
-```text
-safeconnect-mobile/
- ├── android/           # Android app (Kotlin, Jetpack Compose)
- ├── ios/               # iOS app (Swift, SwiftUI)
- └── docs/              # Architecture diagrams, UI mockups, notes
+/android              → Android (Kotlin + Jetpack Compose) /ios                  → iOS (SwiftUI) /backend              → FastAPI backend (initial scaffold) /docs                 → Diagrams, architecture and documentation /design               → Branding, UI flows, wireframes /tests                → Unit & integration tests
 
- Each platform app is independent, but both implement the same core use case: trusted contacts + safety check-ins + local history.
+Each folder may contain `.gitkeep` files while development evolves.
+
+---
+
+# 🏗 Architecture Overview
+
+SafeConnect follows **Clean Architecture** with clear separation of concerns:
+
+- **Domain Layer**  
+  - Core models  
+  - Business rules  
+  - Interfaces  
+
+- **Data Layer**  
+  - API clients  
+  - Local persistence  
+  - Repositories  
+
+- **Presentation Layer**  
+  - Jetpack Compose (Android)  
+  - SwiftUI (iOS)  
+  - State handling (MVI / MVVM)  
+
+This structure keeps the project scalable, testable, and adaptable for multiple platforms.
+
+---
+
+# 🛠 Tech Stack
+
+### **Mobile**
+- Android — Kotlin, Jetpack Compose
+- iOS — SwiftUI (future development)
+- Coroutines / Flow
+- Clean Architecture + MVI/MVVM
+
+### **Backend**
+- FastAPI (Python)
+- WebSocket / REST API
+- Future:  
+  - Audio streaming service  
+  - Alert orchestration engine  
+  - Contact management
+
+---
+
+# 🚨 Core Features (MVP)
+
+- One-tap emergency alert ❗
+- Live status updates  
+- Quick-call connection UI  
+- Contact selection  
+- Fail-safe retry logic  
+- Simple, accessible UI for all ages  
+
+---
+
+# 🧭 Roadmap (High Level)
+
+### **Phase 1 — Core MVP**
+- Basic Android UI (Compose)  
+- Alert workflow  
+- Local persistence  
+- Initial FastAPI backend  
+- Early tests and monitoring  
+
+### **Phase 2 — Communication Layer**
+- WebSocket call session prototype  
+- Push notifications  
+- Contact linking  
+
+### **Phase 3 — AI-Assisted Safety**
+- Voice/shout detection  
+- Fall detection  
+- Smart post-event log  
+
+### **Phase 4 — Dashboard**
+- PWA dashboard for family members  
+- Location history  
+- Alert playback  
+
+---
+
+# ▶ Running the backend (placeholder)
+
+From `/backend`:
+
+```bash
+uvicorn main:app --reload
 
 
 ---
 
-Roadmap
+🤝 Contributing
 
-[x] Android MVP: contacts, check-ins and local history
-
-[x] iOS MVP: contacts, check-ins and local history
-
-[ ] Shared design system documentation in /docs
-
-[ ] Backend API (Python/FastAPI) to sync check-ins across devices
-
-[ ] Push notifications for missed check-ins
-
-[ ] Optional integration with wearables / IoT devices
-
+Contributions, feedback, and collaboration ideas are welcome.
+Please open an issue or reach out if you'd like to participate.
 
 
 ---
 
-Screenshots
+📄 License
 
-> Coming soon
-(Android and iOS screenshots will be added here once the UI is finalized.)
-
-
-
-
----
-
-About the author
-
-This project was created by Sergio Ramírez, a Software Engineer focused on:
-
-Android (Kotlin, Jetpack Compose)
-
-iOS (SwiftUI)
-
-Backend services (Python)
-
-Cloud and safety/IoT-related systems
-
-
-You can find more on LinkedIn and GitHub.
+MIT License – feel free to use, modify, and contribute.
