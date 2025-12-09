@@ -9,63 +9,75 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.safeconnect.app.network.CheckInRequest
+import com.safeconnect.app.network.CheckInType
+import com.safeconnect.app.network.CreateUserRequest
+import com.safeconnect.app.network.RetrofitClient
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
-            SafetyCheckInScreen()
+            AppUI()
         }
     }
 }
 
 @Composable
-fun SafetyCheckInScreen() {
+fun AppUI() {
+    var userId by remember { mutableStateOf<String?>(null) }
     var history by remember { mutableStateOf(listOf<String>()) }
+    var status by remember { mutableStateOf("") }
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(20.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+    val api = RetrofitClient.api
+    val scope = rememberCoroutineScope()
 
-            Text("Safety Check-in", style = MaterialTheme.typography.headlineMedium)
-            Spacer(modifier = Modifier.height(20.dp))
+    fun sendCheck(type: CheckInType) {
+        scope.launch {
+            status = "Sending..."
 
-            Button(
-                onClick = {
-                    history = history + "I'm OK ✔️ — ${java.time.LocalTime.now()}"
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("I'm OK ✔️")
+            if (userId == null) {
+                val user = api.createUser(CreateUserRequest("Android User"))
+                userId = user.id
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            val id = userId!!
+            val response = api.createCheckIn(id, CheckInRequest(type))
+            history = history + "${type.name} → ${response.timestamp}"
 
-            Button(
-                onClick = {
-                    history = history + "Need to Talk ☎️ — ${java.time.LocalTime.now()}"
-                },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.errorContainer)
-            ) {
-                Text("Need to Talk ☎️")
-            }
-
-            Spacer(modifier = Modifier.height(30.dp))
-
-            Text("History:", style = MaterialTheme.typography.titleMedium)
-
-            history.forEach {
-                Text("• $it")
-            }
+            status = "Done!"
         }
+    }
+
+    Column(
+        modifier = Modifier.fillMaxSize().padding(20.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+
+        Text("SafeConnect App", style = MaterialTheme.typography.headlineLarge)
+
+        Spacer(Modifier.height(20.dp))
+
+        Button(onClick = { sendCheck(CheckInType.OK) }, modifier = Modifier.fillMaxWidth()) {
+            Text("I'm OK ✔️")
+        }
+
+        Spacer(Modifier.height(10.dp))
+
+        Button(onClick = { sendCheck(CheckInType.NEED_TO_TALK) }, modifier = Modifier.fillMaxWidth()) {
+            Text("Need to Talk ☎️")
+        }
+
+        Spacer(Modifier.height(20.dp))
+
+        Text("Status: $status")
+
+        Spacer(Modifier.height(20.dp))
+
+        Text("History:")
+        history.forEach { Text("• $it") }
     }
 }
