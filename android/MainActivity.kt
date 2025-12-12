@@ -1,4 +1,4 @@
-package com.safeconnect.app
+qpackage com.safeconnect.app
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
