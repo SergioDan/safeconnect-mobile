@@ -87,4 +87,12 @@ class CheckInViewModel(
             }
         }
     }
+
+    fun clearHistory() {
+        viewModelScope.launch {
+            _history.value = emptyList()
+            localStore.clearHistory()
+            _status.value = "History cleared"
+        }
+    }
 }
