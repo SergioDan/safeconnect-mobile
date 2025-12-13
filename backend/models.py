@@ -1,14 +1,32 @@
 from pydantic import BaseModel
 from typing import List, Optional
-import datetime
+from datetime import datetime
 
-class User(BaseModel):
+
+# ---------- Requests ----------
+
+class UserCreate(BaseModel):
+    name: str
+    email: Optional[str] = None
+
+
+class CheckInCreate(BaseModel):
+    type: str  # "OK" or "NEED_TO_TALK"
+    selected_contact_ids: Optional[List[str]] = None
+
+
+# ---------- Responses / Stored Models ----------
+
+class UserOut(BaseModel):
     id: str
     name: str
     email: Optional[str] = None
 
-class CheckIn(BaseModel):
+
+class CheckInOut(BaseModel):
+    id: str
     user_id: str
-    type: str  # "OK" o "NEED_TO_TALK"
-    timestamp: str = datetime.datetime.utcnow().isoformat()
+    timestamp: str
+    type: str
     selected_contact_ids: Optional[List[str]] = None
+    notified_contact_ids: Optional[List[str]] = None
