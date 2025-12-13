@@ -5,11 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.safeconnect.app.network.CheckInType
 import com.safeconnect.app.network.RetrofitClient
 import com.safeconnect.app.repository.CheckInRepository
+import com.safeconnect.app.storage.LocalStore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class CheckInViewModel : ViewModel() {
+class CheckInViewModel(
+    private val localStore: LocalStore
+) : ViewModel() {
 
     private val repository = CheckInRepository(RetrofitClient.api)
 
@@ -21,6 +24,15 @@ class CheckInViewModel : ViewModel() {
 
     private var userId: String? = null
 
+    init {
+        // Cargar historial guardado al abrir la app
+        viewModelScope.launch {
+            localStore.historyFlow().collect { saved ->
+                _history.value = saved
+            }
+        }
+    }
+
     fun sendCheckIn(type: CheckInType) {
         viewModelScope.launch {
             _status.value = "Sending..."
@@ -31,7 +43,13 @@ class CheckInViewModel : ViewModel() {
             }
 
             val response = repository.sendCheckIn(userId!!, type)
-            _history.value = _history.value + "${type.name} → ${response.timestamp}"
+            val newItem = "${type.name} → ${response.timestamp}"
+
+            val newHistory = _history.value + newItem
+            _history.value = newHistory
+
+            // Guardar historial local
+            localStore.saveHistory(newHistory)
 
             _status.value = "Done!"
         }
