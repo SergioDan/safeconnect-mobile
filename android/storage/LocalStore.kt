@@ -29,6 +29,12 @@ class LocalStore(private val context: Context) {
         }
     }
 
+    suspend fun clearHistory() {
+        context.dataStore.edit { prefs ->
+            prefs.remove(HISTORY_KEY)
+        }
+    }
+
     // ---------- UserId ----------
 
     fun userIdFlow(): Flow<String?> {
