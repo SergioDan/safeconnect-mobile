@@ -1,38 +1,48 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var history: [String] = []
+
+    @StateObject private var viewModel = CheckInViewModel()
 
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Safety Check-in")
-                .font(.title)
-                .bold()
+        VStack(spacing: 16) {
+            Text("SafeConnect")
+                .font(.largeTitle)
+
+            if let error = viewModel.error {
+                Text(error)
+                    .foregroundColor(.red)
+            }
+
+            if viewModel.isLoading {
+                ProgressView()
+            }
 
             Button("I'm OK ✔️") {
-                history.append("I'm OK ✔️ — \(Date())")
+                Task {
+                    await viewModel.sendCheckIn(type: "OK")
+                }
             }
-            .buttonStyle(.borderedProminent)
+            .frame(maxWidth: .infinity)
 
             Button("Need to Talk ☎️") {
-                history.append("Need to Talk ☎️ — \(Date())")
+                Task {
+                    await viewModel.sendCheckIn(type: "NEED_TO_TALK")
+                }
             }
-            .buttonStyle(.bordered)
+            .frame(maxWidth: .infinity)
 
-            Divider()
+            Button("Clear history") {
+                viewModel.clearHistory()
+            }
+            .disabled(viewModel.history.isEmpty)
 
-            Text("History")
-                .font(.title3)
-                .padding(.top)
+            Text("Status: \(viewModel.status)")
 
-            List(history, id: \.self) { item in
+            List(viewModel.history, id: \.self) { item in
                 Text(item)
             }
         }
         .padding()
     }
-}
-
-#Preview {
-    ContentView()
 }
