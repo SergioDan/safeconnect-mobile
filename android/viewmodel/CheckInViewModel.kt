@@ -16,40 +16,50 @@ class CheckInViewModel(
 
     private val repository = CheckInRepository(RetrofitClient.api)
 
+    // ----- UI state -----
+
     private val _status = MutableStateFlow("")
     val status: StateFlow<String> = _status
 
     private val _history = MutableStateFlow<List<String>>(emptyList())
     val history: StateFlow<List<String>> = _history
 
+    // ----- Internal state -----
+
     private var userId: String? = null
 
+    // ----- Init: load persisted history -----
+
     init {
-        // Cargar historial guardado al abrir la app
         viewModelScope.launch {
-            localStore.historyFlow().collect { saved ->
-                _history.value = saved
+            localStore.historyFlow().collect { savedHistory ->
+                _history.value = savedHistory
             }
         }
     }
+
+    // ----- Actions -----
 
     fun sendCheckIn(type: CheckInType) {
         viewModelScope.launch {
             _status.value = "Sending..."
 
+            // Create user once
             if (userId == null) {
                 val user = repository.createUser("Android User")
                 userId = user.id
             }
 
+            // Send check-in
             val response = repository.sendCheckIn(userId!!, type)
+
             val newItem = "${type.name} → ${response.timestamp}"
+            val updatedHistory = _history.value + newItem
 
-            val newHistory = _history.value + newItem
-            _history.value = newHistory
+            _history.value = updatedHistory
 
-            // Guardar historial local
-            localStore.saveHistory(newHistory)
+            // Persist locally
+            localStore.saveHistory(updatedHistory)
 
             _status.value = "Done!"
         }
