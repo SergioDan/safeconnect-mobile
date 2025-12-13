@@ -28,26 +28,33 @@ class CheckInViewModel(
 
     private var userId: String? = null
 
-    // ----- Init: load persisted history -----
-
     init {
+        // Load history
         viewModelScope.launch {
             localStore.historyFlow().collect { savedHistory ->
                 _history.value = savedHistory
             }
         }
-    }
 
-    // ----- Actions -----
+        // Load userId
+        viewModelScope.launch {
+            localStore.userIdFlow().collect { savedUserId ->
+                if (!savedUserId.isNullOrBlank()) {
+                    userId = savedUserId
+                }
+            }
+        }
+    }
 
     fun sendCheckIn(type: CheckInType) {
         viewModelScope.launch {
             _status.value = "Sending..."
 
-            // Create user once
-            if (userId == null) {
+            // Create user once (and persist userId)
+            if (userId.isNullOrBlank()) {
                 val user = repository.createUser("Android User")
                 userId = user.id
+                localStore.saveUserId(user.id)
             }
 
             // Send check-in
@@ -57,8 +64,6 @@ class CheckInViewModel(
             val updatedHistory = _history.value + newItem
 
             _history.value = updatedHistory
-
-            // Persist locally
             localStore.saveHistory(updatedHistory)
 
             _status.value = "Done!"
