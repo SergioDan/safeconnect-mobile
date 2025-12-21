@@ -30,3 +30,11 @@ class CheckInOut(BaseModel):
     type: str
     selected_contact_ids: Optional[List[str]] = None
     notified_contact_ids: Optional[List[str]] = None
+
+class ContactCreate(BaseModel):
+    name: str
+    phone: str
+    priority: int
+
+class ContactOut(ContactCreate):
+    id: str
