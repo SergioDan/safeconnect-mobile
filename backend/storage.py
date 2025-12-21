@@ -1,6 +1,7 @@
 from uuid import uuid4
 from datetime import datetime
 from typing import Dict, List
+from models import ContactCreate, ContactOut
 
 from models import UserCreate, UserOut, CheckInCreate, CheckInOut
 
@@ -9,6 +10,8 @@ class Storage:
     def __init__(self):
         self.users: Dict[str, UserOut] = {}
         self.checkins: Dict[str, List[CheckInOut]] = {}
+
+self.contacts: Dict[str, List[ContactOut]] = {}
 
     def create_user(self, user: UserCreate) -> UserOut:
         user_id = str(uuid4())
@@ -48,3 +51,27 @@ class Storage:
 
 
 DB = Storage()
+def add_contact(self, user_id: str, contact: ContactCreate) -> ContactOut:
+    if user_id not in self.users:
+        raise KeyError("User not found")
+
+    contact_id = str(uuid4())
+    stored = ContactOut(
+        id=contact_id,
+        name=contact.name,
+        phone=contact.phone,
+        priority=contact.priority
+    )
+
+    if user_id not in self.contacts:
+        self.contacts[user_id] = []
+
+    self.contacts[user_id].append(stored)
+    return stored
+
+
+def list_contacts(self, user_id: str) -> List[ContactOut]:
+    if user_id not in self.users:
+        raise KeyError("User not found")
+
+    return self.contacts.get(user_id, [])
