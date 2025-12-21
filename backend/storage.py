@@ -29,7 +29,14 @@ self.contacts: Dict[str, List[ContactOut]] = {}
     def create_checkin(self, user_id: str, checkin: CheckInCreate) -> CheckInOut:
         if user_id not in self.users:
             raise KeyError("User not found")
+# Validate selected contacts
+if checkin.selected_contact_ids:
+    contacts = self.contacts.get(user_id, [])
+    contact_ids = {c.id for c in contacts}
 
+    for cid in checkin.selected_contact_ids:
+        if cid not in contact_ids:
+            raise KeyError(f"Contact {cid} not found")
         checkin_id = str(uuid4())
         stored = CheckInOut(
             id=checkin_id,
