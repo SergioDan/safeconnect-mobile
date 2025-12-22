@@ -1,6 +1,5 @@
 from pydantic import BaseModel
 from typing import List, Optional
-from datetime import datetime
 
 
 # ---------- Requests ----------
@@ -13,6 +12,12 @@ class UserCreate(BaseModel):
 class CheckInCreate(BaseModel):
     type: str  # "OK" or "NEED_TO_TALK"
     selected_contact_ids: Optional[List[str]] = None
+
+
+class ContactCreate(BaseModel):
+    name: str
+    phone: str
+    priority: int
 
 
 # ---------- Responses / Stored Models ----------
@@ -31,10 +36,6 @@ class CheckInOut(BaseModel):
     selected_contact_ids: Optional[List[str]] = None
     notified_contact_ids: Optional[List[str]] = None
 
-class ContactCreate(BaseModel):
-    name: str
-    phone: str
-    priority: int
 
 class ContactOut(ContactCreate):
     id: str
