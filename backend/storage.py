@@ -3,12 +3,9 @@ from datetime import datetime
 from typing import Dict, List
 
 from models import (
-    UserCreate,
-    UserOut,
-    CheckInCreate,
-    CheckInOut,
-    ContactCreate,
-    ContactOut,
+    UserCreate, UserOut,
+    CheckInCreate, CheckInOut,
+    ContactCreate, ContactOut
 )
 
 
@@ -18,13 +15,14 @@ class Storage:
         self.checkins: Dict[str, List[CheckInOut]] = {}
         self.contacts: Dict[str, List[ContactOut]] = {}
 
-    # ---------- USERS ----------
+    # ---------- Users ----------
+
     def create_user(self, user: UserCreate) -> UserOut:
         user_id = str(uuid4())
         stored = UserOut(
             id=user_id,
             name=user.name,
-            email=user.email,
+            email=user.email
         )
         self.users[user_id] = stored
         return stored
@@ -32,8 +30,9 @@ class Storage:
     def list_users(self) -> List[UserOut]:
         return list(self.users.values())
 
-    # ---------- CONTACTS ----------
-    def create_contact(self, user_id: str, contact: ContactCreate) -> ContactOut:
+    # ---------- Contacts ----------
+
+    def add_contact(self, user_id: str, contact: ContactCreate) -> ContactOut:
         if user_id not in self.users:
             raise KeyError("User not found")
 
@@ -42,7 +41,7 @@ class Storage:
             id=contact_id,
             name=contact.name,
             phone=contact.phone,
-            priority=contact.priority,
+            priority=contact.priority
         )
 
         if user_id not in self.contacts:
@@ -54,17 +53,20 @@ class Storage:
     def list_contacts(self, user_id: str) -> List[ContactOut]:
         if user_id not in self.users:
             raise KeyError("User not found")
+
         return self.contacts.get(user_id, [])
 
-    # ---------- CHECKINS ----------
+    # ---------- Check-ins ----------
+
     def create_checkin(self, user_id: str, checkin: CheckInCreate) -> CheckInOut:
         if user_id not in self.users:
             raise KeyError("User not found")
 
-        # Validate selected contacts (si vienen)
+        # Validate selected contacts exist (if provided)
         if checkin.selected_contact_ids:
             contacts = self.contacts.get(user_id, [])
             contact_ids = {c.id for c in contacts}
+
             for cid in checkin.selected_contact_ids:
                 if cid not in contact_ids:
                     raise KeyError(f"Contact {cid} not found")
@@ -76,7 +78,7 @@ class Storage:
             timestamp=datetime.utcnow().isoformat(),
             type=checkin.type,
             selected_contact_ids=checkin.selected_contact_ids,
-            notified_contact_ids=None,
+            notified_contact_ids=None
         )
 
         if user_id not in self.checkins:
@@ -86,6 +88,9 @@ class Storage:
         return stored
 
     def list_checkins(self, user_id: str) -> List[CheckInOut]:
+        if user_id not in self.users:
+            raise KeyError("User not found")
+
         return self.checkins.get(user_id, [])
 
 
