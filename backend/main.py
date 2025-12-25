@@ -1,34 +1,62 @@
 from fastapi import FastAPI, HTTPException
 
+# Pydantic models (tu API)
 from models import (
-    UserCreate, UserOut,
-    CheckInCreate, CheckInOut,
-    ContactCreate, ContactOut
+    UserCreate,
+    UserOut,
+    ContactCreate,
+    ContactOut,
+    CheckInCreate,
+    CheckInOut,
 )
+
+# In-memory storage (por ahora para contacts/checkins)
 from storage import DB
+
+# SQLite / SQLAlchemy (para Users)
+from db import Base, engine, SessionLocal
+from models_db import UserDB
+
+
+# Create tables (SQLite)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
 
+# ---------- Health ----------
 @app.get("/health")
 def health():
     return {"status": "ok"}
 
 
-# ---------- Users ----------
-
+# ---------- Users (SQLite) ----------
 @app.post("/users", response_model=UserOut)
 def create_user(user: UserCreate):
-    return DB.create_user(user)
+    db = SessionLocal()
+    try:
+        user_db = UserDB.create(
+            name=user.name,
+            email=user.email,
+        )
+        db.add(user_db)
+        db.commit()
+        db.refresh(user_db)
+        return user_db
+    finally:
+        db.close()
 
 
 @app.get("/users", response_model=list[UserOut])
 def list_users():
-    return DB.list_users()
+    db = SessionLocal()
+    try:
+        return db.query(UserDB).all()
+    finally:
+        db.close()
 
 
-# ---------- Contacts ----------
-
+# ---------- Contacts (in-memory) ----------
 @app.post("/users/{user_id}/contacts", response_model=ContactOut)
 def add_contact(user_id: str, contact: ContactCreate):
     try:
@@ -45,16 +73,20 @@ def list_contacts(user_id: str):
         raise HTTPException(status_code=404, detail="User not found")
 
 
-# ---------- Check-ins ----------
-
+# ---------- Check-ins (in-memory) ----------
 @app.post("/users/{user_id}/checkins", response_model=CheckInOut)
 def create_checkin(user_id: str, checkin: CheckInCreate):
     try:
         return DB.create_checkin(user_id, checkin)
     except KeyError as e:
         msg = str(e)
+
+        # Si el error habla de un contacto específico, devolvemos ese mensaje
+        # (ej: "Contact <id> not found")
         if "Contact" in msg:
             raise HTTPException(status_code=404, detail=msg)
+
+        # Si no, lo tratamos como user not found
         raise HTTPException(status_code=404, detail="User not found")
 
 
