@@ -28,13 +28,9 @@ class CheckInDB(Base):
     id = Column(String, primary_key=True, index=True)
     user_id = Column(String, ForeignKey("users.id"), index=True, nullable=False)
 
-    # Ej: "safe" o "need_to_talk" (o lo que uses)
     type = Column(String, nullable=False)
-
-    # Fecha/hora real en DB
     timestamp = Column(DateTime, nullable=False, default=datetime.utcnow)
 
-    # Guardamos listas como JSON en texto para hacerlo simple
     selected_contact_ids = Column(Text, nullable=True)
     notified_contact_ids = Column(Text, nullable=True)
 
