@@ -67,9 +67,9 @@ class Storage:
             contacts = self.contacts.get(user_id, [])
             contact_ids = {str(c.id) for c in contacts}
 
-            for cid in checkin.selected_contact_ids:
-                if cid not in contact_ids:
-                    raise KeyError(f"Contact {cid} not found")
+             for cid in checkin.selected_contact_ids:
+    if str(cid) not in contact_ids:
+        raise KeyError(f"Contact {cid} not found")
 
         checkin_id = str(uuid4())
         stored = CheckInOut(
