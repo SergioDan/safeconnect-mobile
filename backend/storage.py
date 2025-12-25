@@ -65,10 +65,10 @@ class Storage:
         # Validate selected contacts exist (if provided)
         if checkin.selected_contact_ids:
             contacts = self.contacts.get(user_id, [])
-            contact_ids = {str(c.id) for c in contacts}
+            contact_ids = {c.id for c in contacts}
 
-             for cid in checkin.selected_contact_ids:
-    if str(cid) not in contact_ids:
+for cid in checkin.selected_contact_ids:
+    if cid not in contact_ids:
         raise KeyError(f"Contact {cid} not found")
 
         checkin_id = str(uuid4())
