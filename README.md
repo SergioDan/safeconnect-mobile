@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="design/safeconnect-logo.png" width="180" alt="SafeConnect logo">
+  <img src="design/safeconnect-logo.jpg" width="180" alt="SafeConnect logo">
 </p>
 
 SafeConnect is a human-centered safety communication app designed to help people stay connected during emergency or high-stress situations.
