@@ -1,133 +1,118 @@
 
-# SafeConnect  
-A human-centered safety communication app designed to help people stay connected during emergency or high-stress situations.  
-SafeConnect aims to provide a fast, reliable way to send alerts, initiate calls, and share real-time status with trusted contacts — even when traditional communication methods fail.
+SafeConnect is a human-centered safety communication app designed to help people stay connected during emergency or high-stress situations.
 
----
+It provides a fast, reliable, and low-friction way to notify trusted contacts, share real-time status, and initiate communication — especially when every second matters.
 
-## 📌 Why SafeConnect?  
-SafeConnect was born from a very personal motivation:  
-**creating a simple, reliable way for loved ones to reach each other immediately during moments of fear, danger, or medical need.**
+SafeConnect prioritizes simplicity, reliability, and emotional clarity over complex emergency workflows.
 
-Most solutions are:
-- Slow  
-- Complicated  
-- Not designed for real emergencies  
-- Dependent on too many steps  
+📌 Why SafeConnect?
+SafeConnect was born from a very personal motivation:
+Creating a simple and dependable way for loved ones to reach each other immediately during moments of fear, danger, or medical need.
 
+Many existing safety solutions are:
+Slow to operate in stressful moments
+Overloaded with complex flows
+Designed for systems, not people
+Fragile under real-world conditions
 SafeConnect focuses on:
-- **Instant alerting**
-- **Minimal taps**
-- **Human-centred design**
-- **Cross-platform communication**
-- **Fail-safe mechanisms**
 
----
+- One-tap actions
+- Minimal cognitive load
+- Human-centered UX
+- Cross-platform communication
+- Fail-safe and retry mechanisms
+- The goal is not just emergency escalation —
+but human connection when it matters most.
 
-# 🧩 Project Structure
+🧩 Project Structure
 
-/android              → Android (Kotlin + Jetpack Compose) /ios                  → iOS (SwiftUI) /backend              → FastAPI backend (initial scaffold) /docs                 → Diagrams, architecture and documentation /design               → Branding, UI flows, wireframes /tests                → Unit & integration tests
+/android      → Android app (Kotlin + Jetpack Compose)
+/ios          → iOS app (SwiftUI – planned)
+/backend      → FastAPI backend (Python)
+/docs         → Architecture diagrams & documentation
+/design       → Branding, UI flows, wireframes
+/tests        → Unit & integration tests
 
-Each folder may contain `.gitkeep` files while development evolves.
+Some folders may include .gitkeep files while features are still evolving.
 
----
+🏗 Architecture Overview
+SafeConnect follows Clean Architecture, ensuring scalability, testability, and long-term maintainability.
+Domain Layer
+Core business models
+Use cases
+Platform-agnostic rules
+Data Layer
+REST & WebSocket clients
+Local persistence
+Repository abstractions
+Presentation Layer
+Android: Jetpack Compose
+iOS: SwiftUI
+State management using MVI / MVVM
+This separation allows each platform to evolve independently while sharing consistent business logic.
 
-# 🏗 Architecture Overview
+🛠 Tech Stack
+Mobile
+Kotlin + Jetpack Compose (Android)
+SwiftUI (iOS – upcoming)
+Coroutines & Flow
+Clean Architecture
+MVI / MVVM
+Backend
+Python + FastAPI
+REST APIs
+WebSocket support
+Future services:
+Alert orchestration
+Real-time communication
+Contact & device management
 
-SafeConnect follows **Clean Architecture** with clear separation of concerns:
+🚨 Core Features (MVP)
+One-tap “I’m OK” / “Need to Talk” check-ins
+Real-time timestamps
+Trusted contact selection
+Push-ready architecture
+Fail-safe retry logic
+Accessible UI for all ages
 
-- **Domain Layer**  
-  - Core models  
-  - Business rules  
-  - Interfaces  
+🧭 Roadmap (High Level)
+Phase 1 — Core MVP
+Android UI (Jetpack Compose)
+Check-in workflow
+Local persistence
+Initial FastAPI backend
+Logging & basic monitoring
 
-- **Data Layer**  
-  - API clients  
-  - Local persistence  
-  - Repositories  
+Phase 2 — Communication Layer
+WebSocket session prototype
+Push notifications (FCM / APNs)
+Device & contact linking
 
-- **Presentation Layer**  
-  - Jetpack Compose (Android)  
-  - SwiftUI (iOS)  
-  - State handling (MVI / MVVM)  
+Phase 3 — AI-Assisted Safety
+Voice / shout detection
+Fall detection
+Smart post-event summaries
 
-This structure keeps the project scalable, testable, and adaptable for multiple platforms.
+Phase 4 — Family Dashboard
+PWA dashboard
+Alert history
+Location & timeline playback
 
----
-
-# 🛠 Tech Stack
-
-### **Mobile**
-- Android — Kotlin, Jetpack Compose
-- iOS — SwiftUI (future development)
-- Coroutines / Flow
-- Clean Architecture + MVI/MVVM
-
-### **Backend**
-- FastAPI (Python)
-- WebSocket / REST API
-- Future:  
-  - Audio streaming service  
-  - Alert orchestration engine  
-  - Contact management
-
----
-
-# 🚨 Core Features (MVP)
-
-- One-tap emergency alert ❗
-- Live status updates  
-- Quick-call connection UI  
-- Contact selection  
-- Fail-safe retry logic  
-- Simple, accessible UI for all ages  
-
----
-
-# 🧭 Roadmap (High Level)
-
-### **Phase 1 — Core MVP**
-- Basic Android UI (Compose)  
-- Alert workflow  
-- Local persistence  
-- Initial FastAPI backend  
-- Early tests and monitoring  
-
-### **Phase 2 — Communication Layer**
-- WebSocket call session prototype  
-- Push notifications  
-- Contact linking  
-
-### **Phase 3 — AI-Assisted Safety**
-- Voice/shout detection  
-- Fall detection  
-- Smart post-event log  
-
-### **Phase 4 — Dashboard**
-- PWA dashboard for family members  
-- Location history  
-- Alert playback  
-
----
-
-# ▶ Running the backend (placeholder)
-
-From `/backend`:
-
-```bash
+▶ Running the Backend (Development)
+From the /backend directory:
+Copy code
+Bash
 uvicorn main:app --reload
-
-
----
+Backend structure and endpoints are actively evolving as part of the MVP.
 
 🤝 Contributing
-
 Contributions, feedback, and collaboration ideas are welcome.
-Please open an issue or reach out if you'd like to participate.
 
-
----
+Feel free to:
+Open an issue
+Propose improvements
+Discuss architectural ideas
 
 📄 License
-
-MIT License – feel free to use, modify, and contribute.
+MIT License
+Free to use, modify, and contribute.
